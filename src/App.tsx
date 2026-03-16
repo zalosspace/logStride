@@ -11,9 +11,16 @@ const supabase = createClient(
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY!
 )
 
+type Day = {
+    date: string
+    hours: number
+    mood: number
+}
+
 export default function App() {
 
     const [user, setUser] = useState<any>(null)
+    const [data, setData] = useState<Day[]>([])
 
     async function signInWithGoogle() {
         await supabase.auth.signInWithOAuth({
@@ -64,6 +71,26 @@ export default function App() {
 
     }, [])
 
+    async function fetchHours() {
+
+        const { data: rows, error } = await supabase
+            .from("days")
+            .select("date, hours, mood")
+            .order("date", { ascending: true })
+            .limit(30)
+
+        if (error) {
+            console.error(error)
+            return
+        }
+
+        setData(rows as Day[])
+    }
+
+    useEffect(() => {
+        fetchHours()
+    }, [])
+
     return (
         <div className="max-w-[1400px] mx-auto">
             {user ? (
@@ -75,19 +102,19 @@ export default function App() {
             )}
 
             <div id="grid-layout" 
-                className="grid grid-cols-3 grid-rows-2 gap-2 h-[93vh]
+                className="grid grid-cols-3 grid-rows-2 gap-3 h-[93vh]
                 min-h-0">
                 <div className="widget">
                     <Timer />
                 </div>
                 <div className="widget">
-                    <WorkHeatmap />
+                    <WorkHeatmap data={data}/>
                 </div>
                 <div className="widget">
                     <Todo />
                 </div>
                 <div className="widget col-span-3">
-                    <HourChart />
+                    <HourChart data={data}/>
                 </div>
             </div>
 

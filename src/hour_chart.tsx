@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react"
+import { createClient } from "@supabase/supabase-js"
 import {
   AreaChart,
   Area,
@@ -8,25 +10,13 @@ import {
   ResponsiveContainer
 } from "recharts"
 
-function generateData(days = 14) {
-  const data = []
-
-  for (let i = days - 1; i >= 0; i--) {
-    const date = new Date()
-    date.setDate(date.getDate() - i)
-
-    data.push({
-      date: date.toLocaleDateString("en-US", { weekday: "short" }),
-      hours: Math.floor(Math.random() * 9)
-    })
-  }
-
-  return data
+type Day = {
+  date: string
+  hours: number
+  mood: number
 }
 
-export default function HourChart() {
-  const data = generateData(30)
-
+export default function HourChart({ data }: { data: Day[] }) {
   return (
     <div style={{ width: "100%", height: 300 }}>
       <ResponsiveContainer>
