@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import "./globals.css"
 
 type DayType = "" | "good-day" | "mid-day" | "bad-day"
 
@@ -7,16 +6,12 @@ type DayData = {
     [key: number]: DayType
 }
 
-export default function WorkHeatmap({ data=[] }: { data: Day[] }) {
+export default function MoodHeatmap() {
 
     const [moodData, setMoodData] = useState<DayData>({})
-    const dayMap = new Map(
-        data.map(d => [d.date, d])
-    )
     const [selectedDay, setSelectedDay] = useState<number | null>(null)
     const [showModal, setShowModal] = useState(false)
     const [menuPos, setMenuPos] = useState({ x: 0, y: 0 })
-    const [tab, setTab] = useState<"mood" | "hours">("hours")
 
     const date = new Date()
     const today = date.getDate()
@@ -94,26 +89,7 @@ export default function WorkHeatmap({ data=[] }: { data: Day[] }) {
         let className = "day-cell "
         let type: DayType = ""
 
-        if (tab === "mood") {
-            type = moodData[i]   // existing localStorage mood
-        }
-
-        if (tab === "hours") {
-
-            const dateStr = new Date(
-                date.getFullYear(),
-                date.getMonth(),
-                i
-            ).toISOString().split("T")[0]
-
-            const entry = dayMap.get(dateStr)
-
-            if (entry) {
-                if (entry.hours >= 7) type = "good-day"
-                    else if (entry.hours >= 3) type = "mid-day"
-                        else type = "bad-day"
-            }
-        }
+        moodData[i]   // existing localStorage mood
 
         if (type) className += type
             else className += "vacant-day"
@@ -127,7 +103,6 @@ export default function WorkHeatmap({ data=[] }: { data: Day[] }) {
                 className={className}
                 onClick={(e) => {
                     e.stopPropagation()
-                    if (tab === "hours") return
                     if (i > today) return
 
                     setSelectedDay(i)
@@ -144,26 +119,6 @@ export default function WorkHeatmap({ data=[] }: { data: Day[] }) {
 
     return (
         <>
-            <div className="flex gap-2 mb-3">
-                <button
-                    onClick={() => setTab("mood")}
-                    className={`px-3 py-1 rounded-lg ${
-tab === "mood" ? "bg-zinc-700 text-white" : "bg-zinc-200"
-}`}
-                >
-                    Mood
-                </button>
-
-                <button
-                    onClick={() => setTab("hours")}
-                    className={`px-3 py-1 rounded-lg ${
-tab === "hours" ? "bg-zinc-700 text-white" : "bg-zinc-200"
-}`}
-                >
-                    Work Hours
-                </button>
-            </div>
-
             <div className="grid grid-cols-7 gap-2 [&_span]:text-center">
                 <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
                 {cells}
@@ -217,3 +172,4 @@ tab === "hours" ? "bg-zinc-700 text-white" : "bg-zinc-200"
         </>
     )
 }
+

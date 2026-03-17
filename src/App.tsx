@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import HourChart from './hour_chart'
 import Timer from './Timer'
 import LogData from './LogData'
-import WorkHeatmap from './Heatmap'
+import Heatmap from './Heatmap/Heatmap'
 import Todo from './Todo'
 
 const supabase = createClient(
@@ -76,7 +76,7 @@ export default function App() {
         const { data: rows, error } = await supabase
             .from("days")
             .select("date, hours, mood")
-            .order("date", { ascending: true })
+            .order("date", { ascending: false })
             .limit(30)
 
         if (error) {
@@ -88,8 +88,8 @@ export default function App() {
     }
 
     useEffect(() => {
-        fetchHours()
-    }, [])
+        if (user) fetchHours()
+    }, [user])
 
     return (
         <div className="max-w-[1400px] mx-auto">
@@ -108,7 +108,7 @@ export default function App() {
                     <Timer />
                 </div>
                 <div className="widget">
-                    <WorkHeatmap data={data}/>
+                    <Heatmap data={data}/>
                 </div>
                 <div className="widget">
                     <Todo />
