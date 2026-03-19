@@ -1,57 +1,56 @@
 type Day = {
-  date: string;
-  hours: number;
-  mood: number;
+    date: string;
+    hours: number;
+    mood: number;
 };
 
-export default function Heatmap({ data = [] }: { data: Day[] }) {
+export default function WorkHourHeatmap({ data = [] }: { data: Day[] }) {
 
-  const dayMap = new Map<string, Day>();
-  data.forEach((d) => {
-    const dt = new Date(d.date);
-    const key =
-      dt.getFullYear() + "-" +
-      String(dt.getMonth() + 1).padStart(2, "0") + "-" +
-      String(dt.getDate()).padStart(2, "0");
+    // const dayMap = new Map<string, Day>();
+    // data.forEach((d) => {
+    //     const dt = new Date(d.date);
+    //     const key =
+    //         dt.getFullYear() + "-" +
+    //             String(dt.getMonth() + 1).padStart(2, "0") + "-" +
+    //             String(dt.getDate()).padStart(2, "0");
+    //
+    //     dayMap.set(key, d);
+    // });
 
-    dayMap.set(key, d);
-  });
+    const date = new Date()
+    const firstDay =
+        (new Date(date.getFullYear(), date.getMonth(), 1).getDay() + 6) % 7
+    const cells = []
 
-  const cells = [];
-  const today = new Date();
+    // empty padding before month start
+    for (let i = 0; i < firstDay; i++) {
+        cells.push(
+            <div key={"empty-" + i} className="day-cell disabled-day"></div>
+        )
+    }
 
-  for (let i = 29; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(today.getDate() - i);
+    // actual days
+    data.forEach((day, idx) => {
+        const hours = day?.hours ?? 0;
 
-    const dateStr =
-      date.getFullYear() + "-" +
-      String(date.getMonth() + 1).padStart(2, "0") + "-" +
-      String(date.getDate()).padStart(2, "0");
+        const intensity = Math.min(hours / 8, 1);
 
+        cells.push(
+            <div
+                key={idx}
+                className="day-cell aspect-square rounded-sm"
+                style={{
+                    backgroundColor: `hsl(330, 100%, ${40 + (1-intensity) * 50}%)`
+                }}
+                title={`${day.date}: ${hours}h`}
+            />
+        )
+    })
 
-    const day = dayMap.get(dateStr);
-    const hours = day?.hours ?? 0;
-        console.log(dateStr)
-        console.log(hours)
-
-    const intensity = Math.min(hours / 8, 1);
-
-    cells.push(
-      <div
-        key={dateStr}
-        className="day-cell aspect-square rounded-sm"
-        style={{
-          backgroundColor: `hsl(330, 100%, ${20 + intensity * 50}%)`
-        }}
-        title={`${dateStr}: ${hours}h`}
-      />
+    return (
+            <div className="grid grid-cols-7 gap-2 [&_span]:text-center">
+                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                {cells}
+            </div>
     );
-  }
-
-  return (
-    <div className="grid grid-cols-7 gap-2">
-      {cells}
-    </div>
-  );
 }

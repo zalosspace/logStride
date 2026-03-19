@@ -84,7 +84,7 @@ export default function App() {
             return
         }
 
-        setData(rows as Day[])
+        setData((rows as Day[]).reverse())
     }
 
     useEffect(() => {

@@ -23,11 +23,11 @@ export default function MoodHeatmap() {
     }
 
     function storeData(d: DayData) {
-        localStorage.setItem("day_moodData", JSON.stringify(d))
+        localStorage.setItem("day_data", JSON.stringify(d))
     }
 
     function retrieveData(): DayData | null {
-        const d = localStorage.getItem("day_moodData")
+        const d = localStorage.getItem("day_data")
         return d ? JSON.parse(d) : null
     }
 
@@ -85,36 +85,31 @@ export default function MoodHeatmap() {
 
     // actual days
     for (let i = 1; i <= totalDays(); i++) {
+        let type: DayType = moodData[i] || "";
+        let className = "day-cell ";
 
-        let className = "day-cell "
-        let type: DayType = ""
+        if (type) className += type;
+            else className += "vacant-day";
 
-        moodData[i]   // existing localStorage mood
-
-        if (type) className += type
-            else className += "vacant-day"
-        if (i === today && !type) className += " today"
-
-        if (i > today) className += " action-not-allowed"
+        if (i === today && !type) className += " today";
+        if (i > today) className += " action-not-allowed";
 
         cells.push(
             <div
                 key={i}
                 className={className}
                 onClick={(e) => {
-                    e.stopPropagation()
-                    if (i > today) return
+                    e.stopPropagation();
+                    if (i > today) return;
 
-                    setSelectedDay(i)
-                    setMenuPos({
-                        x: e.clientX,
-                        y: e.clientY
-                    })
-                    setShowModal(true)
-                }}>
+                    setSelectedDay(i);
+                    setMenuPos({ x: e.clientX, y: e.clientY });
+                    setShowModal(true);
+                }}
+            >
                 {i === today && !type ? "?" : ""}
             </div>
-        )
+        );
     }
 
     return (
