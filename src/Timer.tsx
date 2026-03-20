@@ -43,7 +43,7 @@ export default function Timer() {
   return (
     <div className="flex flex-col items-center gap-4">
       
-      <h1 className="text-4xl font-mono">
+      <h1 className="text-5xl font-mono">
         {formatTime(seconds)}
       </h1>
 

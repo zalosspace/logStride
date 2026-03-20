@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import "../globals.css"
 import MoodHeatmap from "./MoodHeatmap"
 import WorkHoursHeatmap from "./WorkHoursHeatmap"
 

@@ -48,7 +48,7 @@ export default function LogData() {
   }
 
   return (
-    <div style={{maxWidth: 400, margin: "auto"}}>
+    <div className="max-w-[400px] bg-[var(--tertiary)]">
       <h2>Log Your Day</h2>
 
       <label>Date</label>

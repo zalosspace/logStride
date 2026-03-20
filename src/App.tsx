@@ -71,13 +71,13 @@ export default function App() {
 
     }, [])
 
-    async function fetchHours() {
+    async function fetchHours(days: number = 30) {
 
         const { data: rows, error } = await supabase
             .from("days")
             .select("date, hours, mood")
             .order("date", { ascending: false })
-            .limit(30)
+            .limit(days)
 
         if (error) {
             console.error(error)
@@ -92,7 +92,10 @@ export default function App() {
     }, [user])
 
     return (
-        <div className="max-w-[1400px] mx-auto">
+        <>
+            <nav className="flex justify-around mb-8">
+                <h1 className="font-bold text-2xl">Log Stride</h1>
+
             {user ? (
                 <h2>Welcome {user.email}</h2>
             ) : (
@@ -100,25 +103,28 @@ export default function App() {
                     Sign in with Google
                 </button>
             )}
+            </nav>
+        <div className="max-w-[1400px] mx-auto">
 
             <div id="grid-layout" 
-                className="grid grid-cols-3 grid-rows-2 gap-3 h-[93vh]
+                className="grid grid-cols-3 grid-rows-2 gap-5 h-[90vh]
                 min-h-0">
-                <div className="widget">
+                <div className="widget grid place-items-center">
                     <Timer />
-                </div>
-                <div className="widget">
-                    <Heatmap data={data}/>
                 </div>
                 <div className="widget">
                     <Todo />
                 </div>
-                <div className="widget col-span-3">
-                    <HourChart data={data}/>
+                <div className="widget grid place-items-center">
+                        <Heatmap data={data}/>
+                    </div>
+                <div className="widget col-span-3 grid place-items-center">
+                    <HourChart data={data} fetchHours={fetchHours}/>
                 </div>
             </div>
 
             <LogData />
         </div>
+        </>
     )
 }
