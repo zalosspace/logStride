@@ -62,7 +62,7 @@ body {
   fill: #60a5fa;
 }
 
-/* Heatmap */
+/* Mood Heatmap */
 .day-cell {
   width: 36px;
   height: 36px;
@@ -70,19 +70,20 @@ body {
 }
 
 .vacant-day {
-  background: #111827;
+    /* background: #fafafa; */
+    border: 3px solid white;
 }
 
 .good-day {
-  background: #22c55e;
+    background: #bfe7c6; /* soft pastel green */
 }
 
 .mid-day {
-  background: #eab308;
+    background: #fff3b0; /* muted pastel yellow */
 }
 
 .bad-day {
-  background: #ef4444;
+    background: #ffb3c1; /* soft pastel red/pink */
 }
 
 .today {
