@@ -73,7 +73,7 @@ export default function HourChart({
             </select>
 
             <button onClick={() => setShowModal(!showModal)}>Expand</button>
-            <div className="w-full h-[300px]">
+            <div className="w-full h-[300px] z-0">
                 {/* <ResponsiveContainer> */}
                 {/*     <AreaChart data={data}> */}
                 {/*         <defs> */}

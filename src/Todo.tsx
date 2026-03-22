@@ -70,20 +70,31 @@ export default function Todo() {
             </ul>
 
             {/* Input */}
-<form onSubmit={addTodo} className="flex gap-2 sticky bottom-0 w-full">
-    <input
-        className="border rounded px-3 py-2 flex-1 min-w-0"
-        placeholder="Write a task..."
-        value={input}
-        onChange={e => setInput(e.target.value)}
-    />
-    <button
-        type="submit"
-        className="px-4 py-2 border rounded shrink-0"
-    >
-        Add
-    </button>
-</form>
+            <form
+                onSubmit={addTodo}
+                className="sticky bottom-0 w-full backdrop-blur bg-zinc-900/70 
+                border border-white/10 rounded-2xl p-2 shadow-xl flex items-center gap-2"
+            >
+                <input
+                    className="flex-1 min-w-0 bg-transparent px-3 py-2 text-white 
+                    placeholder:text-zinc-500 focus:outline-none"
+                    placeholder="What’s the move today..."
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                />
+
+                <button
+                    type="submit"
+                    className="px-4 py-2 rounded-xl bg-[var(--hint)] text-white 
+                    font-medium text-sm shrink-0
+                    transition-all duration-200 
+                    hover:scale-105 hover:shadow-[0_0_15px_var(--hint)] 
+                    active:scale-95"
+                >
+                    +
+                </button>
+            </form>
+
         </div>
     )
 }

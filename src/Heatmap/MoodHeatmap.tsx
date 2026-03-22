@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { supabase } from "../Supabase"
 
 type DayType = "" | "good-day" | "mid-day" | "bad-day"
 
@@ -6,12 +7,27 @@ type DayData = {
     [key: number]: DayType
 }
 
-export default function MoodHeatmap() {
+type Day = {
+    date: string;
+    hours: number;
+    mood: number;
+};
 
-    const [moodData, setMoodData] = useState<DayData>({})
+export default function MoodHeatmap({ data = [] }: { data: Day[] }) {
+
     const [selectedDay, setSelectedDay] = useState<number | null>(null)
     const [showModal, setShowModal] = useState(false)
     const [menuPos, setMenuPos] = useState({ x: 0, y: 0 })
+
+    const moodMap: DayData = {}
+
+    data.forEach(d => {
+        const day = new Date(d.date).getDate()
+
+        if (d.mood === 2) moodMap[day] = "good-day"
+            else if (d.mood === 1) moodMap[day] = "mid-day"
+                else if (d.mood === 0) moodMap[day] = "bad-day"
+    })
 
     const date = new Date()
     const today = date.getDate()
@@ -22,44 +38,44 @@ export default function MoodHeatmap() {
         return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
     }
 
-    function storeData(d: DayData) {
-        localStorage.setItem("day_data", JSON.stringify(d))
-    }
+    async function updateDay(day: number, type: DayType) {
+        let mood = 1
 
-    function retrieveData(): DayData | null {
-        const d = localStorage.getItem("day_data")
-        return d ? JSON.parse(d) : null
-    }
+        if (type === "good-day") mood = 2
+        if (type === "mid-day") mood = 1
+        if (type === "bad-day") mood = 0
 
-    function initData() {
-        let stored = retrieveData()
+        const fullDate = new Date(date.getFullYear(), date.getMonth(), day)
+        .toLocaleDateString("en-CA")
+            
+        const {
+            data: { user }
+        } = await supabase.auth.getUser()
 
-        if (!stored) {
-            const fresh: DayData = {}
+        const { error } = await supabase
+            .from("days")
+            .upsert({
+                user_id: user?.id,
+                date: fullDate,
+                mood: mood,
+                hours: 0 // default
+            },
+                {
+                    onConflict: "user_id,date"
+                }
+            )
 
-            for (let i = 1; i <= totalDays(); i++) {
-                fresh[i] = ""
-            }
+        console.log(fullDate, user?.id)
 
-            storeData(fresh)
-            stored = fresh
+        if (error) {
+            console.error(error)
+            return
         }
 
-        setMoodData(stored)
+        // refresh logic...?
     }
 
-    function updateDay(day: number, type: DayType) {
-        const newData = { ...moodData }
-        newData[day] = type
-
-        setMoodData(newData)
-        storeData(newData)
-    }
-
-    useEffect(() => {
-        initData()
-    }, [])
-
+    // Modal
     useEffect(() => {
         function closeMenu() {
             setShowModal(false)
@@ -85,7 +101,7 @@ export default function MoodHeatmap() {
 
     // actual days
     for (let i = 1; i <= totalDays(); i++) {
-        let type: DayType = moodData[i] || "";
+        let type: DayType = moodMap[i] || "";
         let className = "day-cell ";
 
         if (type) className += type;
@@ -114,15 +130,15 @@ export default function MoodHeatmap() {
 
     return (
         <>
-            <div className="grid grid-cols-7 gap-2 [&_span]:text-center">
-                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+            <div className="grid grid-cols-7 gap-2 text-sm [&_span]:text-center">
+                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                 {cells}
             </div>
 
             {showModal && (
                 <ul
                     onClick={(e) => e.stopPropagation()}
-                    className="fixed z-50 bg-zinc-800 text-white 
+                    className="fixed bg-zinc-800 text-white 
                     rounded-xl p-3 shadow-xl w-44 animate-in fade-in zoom-in-95"
                     style={{
                         top: menuPos.y,

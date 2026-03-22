@@ -85,7 +85,7 @@ export default function Heatmap({ data = [] }: { data: Day[] }) {
 
             {/* Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-end">
+                <div className="fixed inset-0 z-50 backdrop-blur bg-black/50 flex justify-center items-end">
 
                     <div className="w-[95vw] h-[90vh] p-6 bg-[var(--tertiary)] rounded-t-3xl overflow-y-auto">
 

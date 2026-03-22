@@ -1,20 +1,12 @@
 import { useState } from "react"
+import { supabase } from "./Supabase"
 
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL!,
-    import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY!
-)
-
-export default function LogData() {
+export default function LogData({ onClose }: {onClose: () => void}) {
     const today = new Date().toISOString().split("T")[0]
 
     const [date, setDate] = useState(today)
     const [hours, setHours] = useState<number | "">("")
     const [mood, setMood] = useState(5)
-    const [focus, setFocus] = useState(5)
-    const [notes, setNotes] = useState("")
     const [loading, setLoading] = useState(false)
     const [msg, setMsg] = useState("")
 
@@ -25,29 +17,42 @@ export default function LogData() {
         }
 
         setLoading(true)
-        setMsg("")
+        setMsg("") 
+
+        const { data: { user } } = await supabase.auth.getUser()
 
         const { error } = await supabase
-            .from("work_day")
+            .from("days")
             .upsert({
+                user_id: user?.id,
                 date,
-                work_hours: hours,
+                hours: hours,
                 mood,
-                focus_score: focus
-            }, { onConflict: "date" })
+            }, { onConflict: "user_id,date" })
 
         if (error) {
             setMsg(error.message)
         } else {
             setMsg("Day logged successfully")
-            setNotes("")
+
+            setTimeout(() => {
+                onClose()
+            }, 500)
         }
 
         setLoading(false)
     }
 
     return (
-        <div className="max-w-md mx-auto mt-10 p-6 rounded-2xl bg-zinc-900/80 backdrop-blur shadow-xl border border-white/10 space-y-5">
+        <div className="relative max-w-md mx-auto mt-10 p-6 rounded-2xl 
+            bg-zinc-900/80 backdrop-blur shadow-xl border border-white/10 space-y-5">
+            <button
+                onClick={onClose}
+                className="px-3 py-1 bg-red-500 rounded-lg hover:bg-red-600"
+            >
+                ✕
+            </button>
+
 
             <h2 className="text-2xl font-semibold text-white tracking-tight">
                 Log Your Day

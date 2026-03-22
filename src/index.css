@@ -11,8 +11,8 @@
 }
 
 :root {
-    --primary: #020e1f;
-    --secondary: #031a38;
+    --primary: #0c1119;
+    --secondary: #141d30;
     --tertiary: #29394f;
     --hint: #ec4899;
 
@@ -22,16 +22,25 @@
 
 body {
     font-family: "Inter", sans-serif;
-    padding: 20px;
     background: var(--primary);
     color: var(--color-text);
 }
 
 .widget {
+    position: relative;
     background: var(--secondary);
     border-radius: 1.75rem;
     padding: 1rem;
     overflow-y: auto;
+}
+
+.widget-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-text);
 }
 
 .opt-dropdown {
