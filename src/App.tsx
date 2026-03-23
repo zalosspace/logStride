@@ -90,8 +90,9 @@ export default function App() {
 
     return (
         <>
-            <nav className="w-full border-b border-zinc-800 bg-black/40 backdrop-blur">
-                <div className="max-w-[1400px] mx-auto flex items-center justify-between px-6 py-4">
+            <nav className="w-full border-b border-zinc-800 bg-black/40">
+                <div className="max-w-[1400px] mx-auto 
+                    flex items-center justify-between px-8 py-4">
 
                     <h1 className="font-bold text-2xl tracking-tight">
                         Log<span className="text-[var(--hint)]">Stride</span>
@@ -102,9 +103,10 @@ export default function App() {
                         {user ? (
                             <>
                                 <button
-                                    className="bg-[var(--hint)] hover:bg-indigo-600 
+                                    className="bg-[var(--hint)] hover:scale-105
                                     text-white px-4 py-2 rounded-xl text-sm font-medium
-                                    transition-all duration-200 shadow-lg hover:shadow-indigo-500/20"
+                                    transition-all duration-200 shadow-lg hover:shadow-[0_0_10px_var(--hint)] 
+                                    active:scale-95"
                                     onClick={() => setShowLogModal(true)}
                                 >
                                     Log Day
@@ -137,11 +139,11 @@ export default function App() {
                 </div>
             </nav>
 
-            <div className="max-w-[1400px] mx-auto">
+            <div className="max-w-[1400px] mx-auto px-4 py-6">
 
                 <div id="grid-layout" 
-                    className="grid grid-cols-3 grid-rows-2 gap-5 h-[90vh]
-                    min-h-0">
+                    className="grid grid-cols-1 lg:grid-cols-3 gap-5 
+                    min-h-0 h-[calc(100vh-130px)]">
                     <div className="widget grid place-items-center">
                         <Timer />
                     </div>
@@ -151,7 +153,7 @@ export default function App() {
                     <div className="widget grid place-items-center">
                         <Heatmap data={data}/>
                     </div>
-                    <div className="widget col-span-3 grid place-items-center">
+                    <div className="widget col-span-1 lg:col-span-3 grid place-items-center">
                         <HourChart data={data} fetchHours={fetchHours}/>
                     </div>
                 </div>

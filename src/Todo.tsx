@@ -72,7 +72,7 @@ export default function Todo() {
             {/* Input */}
             <form
                 onSubmit={addTodo}
-                className="sticky bottom-0 w-full backdrop-blur bg-zinc-900/70 
+                className="sticky bottom-0 w-full backdrop-blur bg-zinc-900 
                 border border-white/10 rounded-2xl p-2 shadow-xl flex items-center gap-2"
             >
                 <input
@@ -85,12 +85,7 @@ export default function Todo() {
 
                 <button
                     type="submit"
-                    className="px-4 py-2 rounded-xl bg-[var(--hint)] text-white 
-                    font-medium text-sm shrink-0
-                    transition-all duration-200 
-                    hover:scale-105 hover:shadow-[0_0_15px_var(--hint)] 
-                    active:scale-95"
-                >
+                    className="btn px-4 py-2">
                     +
                 </button>
             </form>

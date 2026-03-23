@@ -53,19 +53,44 @@ export default function Heatmap({ data = [] }: { data: Day[] }) {
 
     return (
         <>
-            {/* Tabs */}
-            <div className="flex gap-2 mb-3">
+            <div className="flex items-center justify-between w-full px-4 mb-3">
+
+                <h2 className="text-lg font-semibold text-zinc-200">
+                    Heatmap 
+                </h2>
+                {/* Tabs */}
+                <div className="flex items-center gap-2">
+
+                    <div className="flex gap-1 bg-zinc-900 p-1 rounded-lg">
+                        <button
+                            onClick={() => setTab("mood")}
+                            className={`px-3 py-1 rounded-md text-sm ${
+tab === "mood"
+? "bg-zinc-700 text-white"
+: "text-zinc-400 hover:text-white"
+}`}
+                        >
+                            Mood
+                        </button>
+
+                        <button
+                            onClick={() => setTab("hours")}
+                            className={`px-3 py-1 rounded-md text-sm ${
+tab === "hours"
+? "bg-zinc-700 text-white"
+: "text-zinc-400 hover:text-white"
+}`}
+                        >
+                            Work
+                        </button>
+                    </div>
+
+                </div>
                 <button
-                    onClick={() => setTab("mood")}
-                    className={`px-3 py-1 rounded-lg ${tab === "mood" ? "bg-zinc-700 text-white" : "bg-zinc-200"}`}
+                    onClick={() => setShowModal(true)}
+                    className="btn px-3 py-1.5"
                 >
-                    Mood
-                </button>
-                <button
-                    onClick={() => setTab("hours")}
-                    className={`px-3 py-1 rounded-lg ${tab === "hours" ? "bg-zinc-700 text-white" : "bg-zinc-200"}`}
-                >
-                    Work Hours
+                    Expand
                 </button>
             </div>
 
@@ -75,19 +100,11 @@ export default function Heatmap({ data = [] }: { data: Day[] }) {
                 : <WorkHoursHeatmap data={data} />
             }
 
-            {/* Open Modal */}
-            <button
-                onClick={() => setShowModal(true)}
-                className="mt-3 px-3 py-1 bg-blue-500 rounded-lg"
-            >
-                Expand
-            </button>
-
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-50 backdrop-blur bg-black/50 flex justify-center items-end">
 
-                    <div className="w-[95vw] h-[90vh] p-6 bg-[var(--tertiary)] rounded-t-3xl overflow-y-auto">
+                    <div className="w-max-[95vw] h-[90vh] p-6 bg-[var(--tertiary)] rounded-t-3xl overflow-y-auto">
 
                         {/* Top Bar */}
                         <div className="flex justify-between items-center mb-4">
@@ -120,24 +137,24 @@ export default function Heatmap({ data = [] }: { data: Day[] }) {
                         </div>
 
                         {/* 12 Month Grid */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div className="flex flex-wrap gap-4">
                             {Array.from({ length: 12 }).map((_, monthIndex) => {
                                 const monthData = monthlyData[monthIndex] || []
 
                                 return (
                                     <div
                                         key={monthIndex}
-                                        className="bg-white/5 p-3 rounded-xl"
+                                        className="bg-white/5 p-8 rounded-xl"
                                     >
-                                        <p className="text-sm mb-2">
+                                        <p className="text-sm font-bold mb-2">
                                             {monthNames[monthIndex]}
                                         </p>
 
                                         {tab === "hours" ? (
                                             <WorkHoursHeatmap data={monthData} />
                                         ) : (
-                                            <MoodHeatmap data={monthData} />
-                                        )}
+                                                <MoodHeatmap data={monthData} />
+                                            )}
                                     </div>
                                 )
                             })}

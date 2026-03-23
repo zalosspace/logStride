@@ -130,7 +130,7 @@ export default function MoodHeatmap({ data = [] }: { data: Day[] }) {
 
     return (
         <>
-            <div className="grid grid-cols-7 gap-2 text-sm [&_span]:text-center">
+            <div className="grid grid-cols-7 gap-2 w-fit text-sm [&_span]:text-center">
                 <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                 {cells}
             </div>

@@ -57,7 +57,7 @@ return (
         onClick={running ? stop : start}
         className="w-14 h-14 flex items-center justify-center 
         rounded-full bg-[var(--hint)] text-white 
-        shadow-lg hover:scale-105 hover:shadow-[0_0_20px_var(--hint)]
+        shadow-lg hover:scale-105 hover:shadow-[0_0_10px_var(--hint)]
         transition-all duration-200"
       >
         {running ? (

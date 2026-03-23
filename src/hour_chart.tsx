@@ -65,14 +65,35 @@ export default function HourChart({
 
     return (
         <>
-            <select className="opt-dropdown" onChange={(e) => fetchHours(Number(e.target.value))}>             {options.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                </option>
-            ))}
-            </select>
+            <div className="w-full flex items-center justify-between px-2 mb-8">
 
-            <button onClick={() => setShowModal(!showModal)}>Expand</button>
+                <h2 className="text-lg font-semibold text-zinc-200">
+                    Work Hours
+                </h2>
+
+                <div className="flex items-center gap-2">
+
+                    <select
+                        className="px-3 py-1.5 rounded-lg bg-zinc-900 text-sm text-zinc-300 
+                        border border-zinc-700 focus:outline-none"
+                        onChange={(e) => fetchHours(Number(e.target.value))}
+                    >
+                        {options.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button
+                        onClick={() => setShowModal(!showModal)}
+                        className="btn px-3 py-1.5"
+                    >
+                        Expand
+                    </button>
+
+                </div>
+            </div>
             <div className="w-full h-[300px] z-0">
                 {/* <ResponsiveContainer> */}
                 {/*     <AreaChart data={data}> */}
@@ -97,11 +118,16 @@ export default function HourChart({
                 {/*     </AreaChart> */}
                 {/* </ResponsiveContainer>     */}
 
-                <ResponsiveContainer className="translate-x-[-2%]">
+                <ResponsiveContainer className="max-h-[90%] translate-x-[-2%]">
                     <BarChart data={data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
+                        <XAxis 
+                            dataKey="date" 
+                            tick={{ fill: "#888" }} 
+                        />
+
+                        <YAxis 
+                            tick={{ fill: "#888" }} 
+                        />
                         <Tooltip />
 
                         <Bar

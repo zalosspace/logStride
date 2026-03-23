@@ -40,7 +40,7 @@ export default function WorkHourHeatmap({ data = [] }: { data: Day[] }) {
                 key={idx}
                 className="day-cell aspect-square rounded-sm"
                 style={{
-                    backgroundColor: `hsl(330, 100%, ${40 + (1-intensity) * 50}%)`
+                    backgroundColor: `hsl(330, 100%, ${40 + (1 - intensity) * 50}%)`
                 }}
                 title={`${day.date}: ${hours}h`}
             />
@@ -48,9 +48,9 @@ export default function WorkHourHeatmap({ data = [] }: { data: Day[] }) {
     })
 
     return (
-            <div className="grid grid-cols-7 gap-2 [&_span]:text-center">
-                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
-                {cells}
-            </div>
+        <div className="grid grid-cols-7 gap-2 w-fit text-sm [&_span]:text-center">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            {cells}
+        </div>
     );
 }
