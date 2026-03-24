@@ -105,6 +105,10 @@ body {
     border: 3px solid white;
 }
 
+.empty-day {
+    background-color: grey;
+}
+
 .good-day {
     background: #bfe7c6; /* soft pastel green */
 }

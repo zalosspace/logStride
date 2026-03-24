@@ -6,21 +6,21 @@ type Day = {
 
 export default function WorkHourHeatmap({ data = [] }: { data: Day[] }) {
 
-    // const dayMap = new Map<string, Day>();
-    // data.forEach((d) => {
-    //     const dt = new Date(d.date);
-    //     const key =
-    //         dt.getFullYear() + "-" +
-    //             String(dt.getMonth() + 1).padStart(2, "0") + "-" +
-    //             String(dt.getDate()).padStart(2, "0");
-    //
-    //     dayMap.set(key, d);
-    // });
+    const dayMap = new Map<string, Day>();
+    data.forEach((d) => {
+        dayMap.set(d.date, d);
+    });
 
-    const date = new Date()
+
+    const date = data.length > 0 ? new Date(data[0].date) : new Date()
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
     const firstDay =
         (new Date(date.getFullYear(), date.getMonth(), 1).getDay() + 6) % 7
     const cells = []
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     // empty padding before month start
     for (let i = 0; i < firstDay; i++) {
@@ -30,23 +30,26 @@ export default function WorkHourHeatmap({ data = [] }: { data: Day[] }) {
     }
 
     // actual days
-    data.forEach((day, idx) => {
-        const hours = day?.hours ?? 0;
+for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    
+    const day = dayMap.get(key);
+    const hours = day?.hours ?? 0;
+    const intensity = Math.min(hours / 8, 1);
 
-        const intensity = Math.min(hours / 8, 1);
-
-        cells.push(
-            <div
-                key={idx}
-                className="day-cell aspect-square rounded-sm"
-                style={{
-                    backgroundColor: `hsl(330, 100%, ${40 + (1 - intensity) * 50}%)`
-                }}
-                title={`${day.date}: ${hours}h`}
-            />
-        )
-    })
-
+    cells.push(
+        <div
+            key={key}
+            className="day-cell aspect-square rounded-sm"
+            style={{
+                backgroundColor: day
+                    ? `hsl(330, 100%, ${40 + (1 - intensity) * 50}%)`
+                    : "var(--tertiary)" 
+            }}
+            title={day ? `${key}: ${hours}h` : `${key}: no data`}
+        />
+    );
+}
     return (
         <div className="grid grid-cols-7 gap-2 w-fit text-sm [&_span]:text-center">
             <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>

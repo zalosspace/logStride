@@ -1,32 +1,44 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import MoodHeatmap from "./MoodHeatmap"
 import WorkHoursHeatmap from "./WorkHoursHeatmap"
 
-type Day = {
-    date: string
-    hours: number
-    mood: number
-}
+import type { Day } from "../Types"
+import { fetchAllDays, fetchThisMonth } from "../Supabase"
 
-export default function Heatmap({ data = [] }: { data: Day[] }) {
+export default function Heatmap({ user }) {
     const [tab, setTab] = useState<"mood" | "hours">("hours")
     const [showModal, setShowModal] = useState(false)
-
-    const years = Array.from(
-        new Set(data.map(d => new Date(d.date).getFullYear()))
-    ).sort((a, b) => b - a)
-
+    const [data, setData] = useState<Day[]>([])
+    const [yearlyData, setYearlyData] = useState<Day[]>([])
     const [selectedYear, setSelectedYear] = useState<number | null>(null)
+
+    const years = useMemo(() => {
+        return Array.from(
+            new Set(yearlyData.map(d => new Date(d.date).getFullYear()))
+        ).sort((a, b) => b - a)
+    }, [yearlyData])
 
     useEffect(() => {
         if (years.length > 0) {
             setSelectedYear(years[0])
         }
-    }, [data])
+    }, [years])
+
+    useEffect(() => {
+        if (user) {
+            fetchThisMonth().then(setData)
+        }
+    }, [user])
+
+    useEffect(() => {
+        if (showModal) {
+            fetchAllDays().then(setYearlyData)
+        }
+    }, [showModal])
 
     // Filter by year
     const filteredData = selectedYear
-        ? data.filter(d => new Date(d.date).getFullYear() === selectedYear)
+        ? yearlyData.filter(d => new Date(d.date).getFullYear() === selectedYear)
         : []
 
     // Group by month (0–11)
@@ -50,6 +62,8 @@ export default function Heatmap({ data = [] }: { data: Day[] }) {
         "January","February","March","April","May","June",
         "July","August","September","October","November","December"
     ]
+
+    console.log({ monthlyData , years, selectedYear })
 
     return (
         <>
@@ -104,10 +118,10 @@ tab === "hours"
             {showModal && (
                 <div className="fixed inset-0 z-50 backdrop-blur bg-black/50 flex justify-center items-end">
 
-                    <div className="w-max-[95vw] h-[90vh] p-6 bg-[var(--tertiary)] rounded-t-3xl overflow-y-auto">
+                    <div className="w-max-[95vw] min-w-[80vw] h-[90vh] p-6 bg-[var(--tertiary)] rounded-t-3xl overflow-y-auto">
 
                         {/* Top Bar */}
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex justify-between items-center mb-8">
                             <h2 className="text-xl font-semibold">Yearly Breakdown</h2>
 
                             <div className="flex gap-3 items-center">
@@ -141,6 +155,8 @@ tab === "hours"
                             {Array.from({ length: 12 }).map((_, monthIndex) => {
                                 const monthData = monthlyData[monthIndex] || []
 
+                                if (!monthData || monthData.length === 0) return null
+
                                 return (
                                     <div
                                         key={monthIndex}
@@ -152,6 +168,7 @@ tab === "hours"
 
                                         {tab === "hours" ? (
                                             <WorkHoursHeatmap data={monthData} />
+
                                         ) : (
                                                 <MoodHeatmap data={monthData} />
                                             )}

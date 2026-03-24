@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react"
 import { supabase } from './Supabase'
 
-import HourChart from './hour_chart'
+import type { Day } from "./Types"
+import HourChart from './HourChart'
 import Timer from './Timer'
 import LogData from './LogData'
 import Heatmap from './Heatmap/Heatmap'
 import Todo from './Todo'
-
-type Day = {
-    date: string
-    hours: number
-    mood: number
-}
 
 export default function App() {
 
@@ -142,7 +137,7 @@ export default function App() {
             <div className="max-w-[1400px] mx-auto px-4 py-6">
 
                 <div id="grid-layout" 
-                    className="grid grid-cols-1 lg:grid-cols-3 gap-5 
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 
                     min-h-0 h-[calc(100vh-130px)]">
                     <div className="widget grid place-items-center">
                         <Timer />
@@ -151,7 +146,7 @@ export default function App() {
                         <Todo />
                     </div>
                     <div className="widget grid place-items-center">
-                        <Heatmap data={data}/>
+                        <Heatmap user={user}/>
                     </div>
                     <div className="widget col-span-1 lg:col-span-3 grid place-items-center">
                         <HourChart data={data} fetchHours={fetchHours}/>
