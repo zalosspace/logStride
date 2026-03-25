@@ -3,10 +3,6 @@ import { supabase } from "../Supabase"
 
 type DayType = "" | "good-day" | "mid-day" | "bad-day"
 
-type DayData = {
-    [key: number]: DayType
-}
-
 type Day = {
     date: string;
     hours: number;

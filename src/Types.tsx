@@ -3,4 +3,3 @@ export type Day = {
     hours: number
     mood: number
 }
-

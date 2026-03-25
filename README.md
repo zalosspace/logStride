@@ -1,4 +1,7 @@
 # Log Stride
+
+<img src="https://github.com/user-attachments/assets/0e898c3f-3067-4a54-8cbf-7ed82bda5d0c" />
+
 ## Get Started
 - Clone And Install Packages
 ```

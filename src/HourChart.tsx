@@ -1,15 +1,13 @@
 import { useEffect, useState, useMemo } from "react"
-import { createClient } from "@supabase/supabase-js"
 import { fetchAllDays } from "./Supabase"
 import {
-    AreaChart,
+    // AreaChart,
     BarChart,
     Bar,
-    Area,
+    // Area,
     XAxis,
     YAxis,
     Tooltip,
-    CartesianGrid,
     ResponsiveContainer
 } from "recharts"
 

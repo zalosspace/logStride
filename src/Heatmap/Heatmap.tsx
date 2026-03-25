@@ -5,7 +5,7 @@ import WorkHoursHeatmap from "./WorkHoursHeatmap"
 import type { Day } from "../Types"
 import { fetchAllDays, fetchThisMonth } from "../Supabase"
 
-export default function Heatmap({ user }) {
+export default function Heatmap({ user }: {user: any}) {
     const [tab, setTab] = useState<"mood" | "hours">("hours")
     const [showModal, setShowModal] = useState(false)
     const [data, setData] = useState<Day[]>([])
@@ -26,14 +26,21 @@ export default function Heatmap({ user }) {
 
     useEffect(() => {
         if (user) {
-            fetchThisMonth().then(setData)
+            fetchThisMonth().then(data => {
+                setData(data ?? [])
+            })
         }
     }, [user])
 
     useEffect(() => {
-        if (showModal) {
-            fetchAllDays().then(setYearlyData)
+        if (!showModal) return
+
+        async function load() {
+            const res = await fetchAllDays()
+            setYearlyData(res ?? [])
         }
+
+        load()
     }, [showModal])
 
     // Filter by year
