@@ -40,49 +40,51 @@ export default function Timer() {
       .join(":")
   }
 
-return (
-<div className="relative flex flex-col items-center justify-center h-full">
+    return (
+        <>
+            <h2 className="text-zinc-200 text-lg font-semibold px-8 py-6 absolute top-0 left-0">
+                Timer
+            </h2>
 
-    <h2 className="widget-title">
-      Timer
-    </h2>
+            <div className="w-full">
+                <div className="mt-6 flex flex-col items-center gap-4">
+                    <h1 className="text-7xl font-mono tracking-tight text-white drop-shadow-lg">
+                        {formatTime(seconds)}
+                    </h1>
 
-    <h1 className="text-7xl font-mono tracking-tight text-white drop-shadow-lg">
-      {formatTime(seconds)}
-    </h1>
+                    <button
+                        onClick={running ? stop : start}
+                        className="w-14 h-14 flex items-center justify-center 
+                        rounded-full bg-[var(--hint)] text-white 
+                        shadow-lg hover:scale-105 hover:shadow-[0_0_10px_var(--hint)]
+                        transition-all duration-200"
+                    >
+                        {running ? (
+                            // Pause Icon
+                            <svg width="20" height="20" fill="currentColor">
+                                <rect x="3" y="2" width="5" height="16" rx="1" />
+                                <rect x="12" y="2" width="5" height="16" rx="1" />
+                            </svg>
+                        ) : (
+                                // Play Icon
+                                <svg width="20" height="20" fill="currentColor">
+                                    <polygon points="4,2 18,10 4,18" />
+                                </svg>
+                            )}
+                    </button>
 
-    <div className="mt-6 flex items-center gap-4">
+                    <button
+                        onClick={reset}
+                        className="text-zinc-400 hover:text-white text-sm 
+                        transition-all duration-200"
+                    >
+                        Reset
+                    </button>
 
-      <button
-        onClick={running ? stop : start}
-        className="w-14 h-14 flex items-center justify-center 
-        rounded-full bg-[var(--hint)] text-white 
-        shadow-lg hover:scale-105 hover:shadow-[0_0_10px_var(--hint)]
-        transition-all duration-200"
-      >
-        {running ? (
-          // Pause Icon
-          <svg width="20" height="20" fill="currentColor">
-            <rect x="3" y="2" width="5" height="16" rx="1" />
-            <rect x="12" y="2" width="5" height="16" rx="1" />
-          </svg>
-        ) : (
-          // Play Icon
-          <svg width="20" height="20" fill="currentColor">
-            <polygon points="4,2 18,10 4,18" />
-          </svg>
-        )}
-      </button>
+                </div>
+            </div>
 
-      <button
-        onClick={reset}
-        className="text-zinc-400 hover:text-white text-sm 
-        transition-all duration-200"
-      >
-        Reset
-      </button>
+        </>
 
-    </div>
-  </div>
     )
 }

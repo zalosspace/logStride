@@ -43,6 +43,11 @@ export default function Todo() {
 
     return (
         <div className="w-full">
+
+            <h2 className="px-2 text-lg font-semibold text-zinc-200">
+               Todo 
+            </h2>
+            
             {/* Todo list */}
             <ul className="overflow-y-scroll text-xl space-y-2 mb-5">
                 {todos.map(todo => (

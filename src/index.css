@@ -36,9 +36,6 @@ body {
 }
 
 .widget-title {
-    position: absolute;
-    top: 0;
-    left: 0;
     font-size: 1.2rem;
     font-weight: bold;
     color: var(--color-text);
@@ -134,5 +131,6 @@ body {
 }
 
 .action-not-allowed {
-  opacity: 0.3;
+    border: none;
+    background-color: var(--tertiary);
 }

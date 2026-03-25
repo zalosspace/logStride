@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { supabase } from "../Supabase"
 
 type DayType = "" | "good-day" | "mid-day" | "bad-day"
@@ -15,22 +15,36 @@ type Day = {
 
 export default function MoodHeatmap({ data = [] }: { data: Day[] }) {
 
+    const [localData, setLocalData] = useState<Day[]>(data);
     const [selectedDay, setSelectedDay] = useState<number | null>(null)
     const [showModal, setShowModal] = useState(false)
     const [menuPos, setMenuPos] = useState({ x: 0, y: 0 })
 
-    const moodMap: DayData = {}
+    const moodMap = useMemo(() => {
+        const map = new Map<string, DayType>();
 
-    data.forEach(d => {
-        const day = new Date(d.date).getDate()
+        localData.forEach(d => {
+            let type: DayType = "";
 
-        if (d.mood === 2) moodMap[day] = "good-day"
-            else if (d.mood === 1) moodMap[day] = "mid-day"
-                else if (d.mood === 0) moodMap[day] = "bad-day"
-    })
+            if (d.mood === 2) type = "good-day";
+                else if (d.mood === 1) type = "mid-day";
+                    else if (d.mood === 0) type = "bad-day";
 
-    const date = new Date()
-    const today = date.getDate()
+            map.set(d.date, type);
+        });
+
+        return map;
+    }, [localData]);
+
+    const date = localData.length > 0 ? new Date(data[0].date) : new Date()
+
+    const now = new Date();
+    const isCurrentMonth =
+        now.getFullYear() === date.getFullYear() &&
+            now.getMonth() === date.getMonth();
+
+    const today = isCurrentMonth ? now.getDate() : 31; 
+
     const firstDay =
         (new Date(date.getFullYear(), date.getMonth(), 1).getDay() + 6) % 7
 
@@ -47,6 +61,20 @@ export default function MoodHeatmap({ data = [] }: { data: Day[] }) {
 
         const fullDate = new Date(date.getFullYear(), date.getMonth(), day)
         .toLocaleDateString("en-CA")
+
+        // Local UI Refresh
+        setLocalData(prev => {
+            const newEntry: Day = {
+                date: fullDate,
+                mood,
+                hours: prev.find(d => d.date === fullDate)?.hours ?? 0
+            };
+
+            return [
+                ...prev.filter(d => d.date !== fullDate),
+                newEntry
+            ];
+        }); 
             
         const {
             data: { user }
@@ -65,15 +93,17 @@ export default function MoodHeatmap({ data = [] }: { data: Day[] }) {
                 }
             )
 
-        console.log(fullDate, user?.id)
-
         if (error) {
             console.error(error)
             return
         }
 
-        // refresh logic...?
     }
+
+    // Update Local Data
+    useEffect(() => {
+        setLocalData(data);
+    }, [data]);
 
     // Modal
     useEffect(() => {
@@ -101,7 +131,10 @@ export default function MoodHeatmap({ data = [] }: { data: Day[] }) {
 
     // actual days
     for (let i = 1; i <= totalDays(); i++) {
-        let type: DayType = moodMap[i] || "";
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
+
+        let type: DayType = moodMap.get(key) || "";
+
         let className = "day-cell ";
 
         if (type) className += type;

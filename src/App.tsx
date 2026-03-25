@@ -138,17 +138,20 @@ export default function App() {
 
                 <div id="grid-layout" 
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 
-                    min-h-0 h-[calc(100vh-130px)]">
-                    <div className="widget grid place-items-center">
+                    min-h-0 
+                    ">
+                    {/* h-[calc(100vh-130px)]"> */}
+                    <div className="widget grid place-items-center
+                        aspect-square sm:aspect-auto">
                         <Timer />
                     </div>
-                    <div className="widget">
+                    <div className="widget aspect-square sm:aspect-auto">
                         <Todo />
                     </div>
-                    <div className="widget grid place-items-center">
+                    <div className="widget grid place-items-center aspect-square sm:aspect-auto">
                         <Heatmap user={user}/>
                     </div>
-                    <div className="widget col-span-1 lg:col-span-3 grid place-items-center">
+                    <div className="widget aspect-square sm:aspect-auto col-span-1 lg:col-span-3 grid place-items-center">
                         <HourChart data={data} fetchHours={fetchHours}/>
                     </div>
                 </div>

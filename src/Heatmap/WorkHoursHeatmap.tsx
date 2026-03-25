@@ -30,26 +30,26 @@ export default function WorkHourHeatmap({ data = [] }: { data: Day[] }) {
     }
 
     // actual days
-for (let d = 1; d <= daysInMonth; d++) {
-    const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-    
-    const day = dayMap.get(key);
-    const hours = day?.hours ?? 0;
-    const intensity = Math.min(hours / 8, 1);
+    for (let d = 1; d <= daysInMonth; d++) {
+        const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 
-    cells.push(
-        <div
-            key={key}
-            className="day-cell aspect-square rounded-sm"
-            style={{
-                backgroundColor: day
-                    ? `hsl(330, 100%, ${40 + (1 - intensity) * 50}%)`
-                    : "var(--tertiary)" 
-            }}
-            title={day ? `${key}: ${hours}h` : `${key}: no data`}
-        />
-    );
-}
+        const day = dayMap.get(key);
+        const hours = day?.hours ?? 0;
+        const intensity = Math.min(hours / 8, 1);
+
+        cells.push(
+            <div
+                key={key}
+                className="day-cell aspect-square rounded-sm"
+                style={{
+                    backgroundColor: day
+                        ? `hsl(330, 100%, ${40 + (1 - intensity) * 50}%)`
+                        : "var(--tertiary)" 
+                }}
+                title={day ? `${key}: ${hours}h` : `${key}: no data`}
+            />
+        );
+    }
     return (
         <div className="grid grid-cols-7 gap-2 w-fit text-sm [&_span]:text-center">
             <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>

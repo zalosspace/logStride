@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { createClient } from "@supabase/supabase-js"
+import { fetchAllDays } from "./Supabase"
 import {
     AreaChart,
     BarChart,
@@ -32,36 +33,50 @@ export default function HourChart({
     }) {
 
     const [showModal, setShowModal] = useState(false)
-    const years = Array.from(
-        new Set(data.map(d => new Date(d.date).getFullYear()))
-    ).sort((a, b) => b - a) 
+    const [yearlyData, setYearlyData] = useState<Day[]>([])
+
+    // Years
+    const years = useMemo(() => {
+        return Array.from(
+            new Set(yearlyData.map(d => new Date(d.date).getFullYear()))
+        ).sort((a, b) => b - a)
+    }, [yearlyData])
+
     const [selectedYear, setSelectedYear] = useState(years[0])
-    const filteredData = data.filter(
+
+    const filteredData = yearlyData.filter(
         d => new Date(d.date).getFullYear() === selectedYear
     )
 
-    const monthlyData = groupByMonth(filteredData)
-    const monthsArray = Object.entries(monthlyData)// latest year first
-
     function groupByMonth(data: Day[]) {
-        const months: { [key: string]: Day[] } = {}
+        const months: { [key: number]: Day[] } = {}
 
         data.forEach((item) => {
-            const date = new Date(item.date)
-            const key = `${date.getFullYear()}-${date.getMonth()}`
+            const month = new Date(item.date).getMonth()
 
-            if (!months[key]) months[key] = []
-            months[key].push(item)
+            if (!months[month]) months[month] = []
+            months[month].push(item)
         })
 
         return months
     }
 
+    const monthlyData = groupByMonth(filteredData)
+
+    const monthNames = [
+        "January","February","March","April","May","June",
+        "July","August","September","October","November","December"
+    ]
+
+    useEffect(() => {
+        fetchAllDays().then(setYearlyData)
+    }, [showModal])
+
     useEffect(() => {
         if (years.length > 0) {
             setSelectedYear(years[0])
         }
-    }, [data])
+    }, [years])
 
     return (
         <>
@@ -184,30 +199,43 @@ export default function HourChart({
                         </div>
 
                         {/* Charts Grid */}
-                        <div className="flex flex-wrap gap-5">
-                            {monthsArray.map(([key, monthData]) => (
-                                <div className="relative h-[200px] min-w-[800px] flex-1 bg-white/5 p-2 rounded-xl">
+                        <div className="flex flex-wrap gap-4">
 
-                                    <p className="text-sm mb-1">
-                                        {new Date(monthData[0].date).toLocaleString("default", { month: "long" })}
-                                    </p>
+                            {Array.from({ length: 12 }).map((_, monthIndex) => {
+                                const monthData = monthlyData[monthIndex] || []
 
-                                    <div className="h-[160px]">
-                                        <ResponsiveContainer width="100%" height="100%">
-                                            <BarChart data={monthData}>
-                                                <XAxis dataKey="date" hide />
-                                                <YAxis hide />
-                                                <Tooltip />
-                                                <Bar
-                                                    dataKey="hours"
-                                                    fill="#ff0077"
-                                                    radius={[6, 6, 0, 0]}
-                                                />
-                                            </BarChart>
-                                        </ResponsiveContainer>
+                                if (!monthData.length) return null
+
+                                return (
+                                    <div
+                                        key={monthIndex}
+                                        className="bg-white/5 p-4 rounded-xl min-w-[300px] flex-1"
+                                    >
+
+                                        <p className="text-sm font-bold mb-2">
+                                            {monthNames[monthIndex]}
+                                        </p>
+
+                                        <div className="h-[180px]">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <BarChart data={monthData}>
+                                                    <XAxis dataKey="date" hide />
+                                                    <YAxis hide />
+                                                    <Tooltip />
+
+                                                    <Bar
+                                                        dataKey="hours"
+                                                        fill="#ff0077"
+                                                        radius={[6, 6, 0, 0]}
+                                                    />
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </div>
+
                                     </div>
+                                )
+                            })}
 
-                                </div>                            ))}
                         </div>
 
                     </div>

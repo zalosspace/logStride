@@ -63,8 +63,6 @@ export default function Heatmap({ user }) {
         "July","August","September","October","November","December"
     ]
 
-    console.log({ monthlyData , years, selectedYear })
-
     return (
         <>
             <div className="flex items-center justify-between w-full px-4 mb-3">
