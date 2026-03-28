@@ -1,10 +1,34 @@
-import { useState, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export default function Timer() {
-  const [seconds, setSeconds] = useState(0)
+  const [seconds, setSeconds] = useState(() => fetchTime())
   const [running, setRunning] = useState(false)
 
   const intervalRef = useRef<number | null>(null)
+
+    useEffect(() => {
+        fetchTime()
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem("timer_seconds", JSON.stringify(seconds))
+    }, [seconds])
+
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current)
+            }
+        }
+    }, [])
+
+    function fetchTime() {
+        const lastTime = localStorage.getItem("timer_seconds")
+        if (lastTime === null) return 0
+
+        const seconds = JSON.parse(lastTime)
+        return isNaN(seconds) ? 0 : seconds
+    }
 
   function start() {
     if (running) return
@@ -19,7 +43,7 @@ export default function Timer() {
   function stop() {
     setRunning(false)
 
-    if (intervalRef.current) {
+    if (intervalRef.current !== null) {
       clearInterval(intervalRef.current)
       intervalRef.current = null
     }
