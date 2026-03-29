@@ -1,14 +1,19 @@
 import { useState } from "react"
 import { supabase } from "./Supabase"
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
+import { StaticTimePicker } from "@mui/x-date-pickers/StaticTimePicker"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import dayjs from "dayjs"
 
 export default function LogData({ onClose }: {onClose: () => void}) {
     const today = new Date().toISOString().split("T")[0]
 
     const [date, setDate] = useState(today)
-    const [hours, setHours] = useState<number | "">("")
+    const [hours, setHours] = useState<number | "">()
     const [mood, setMood] = useState(5)
     const [loading, setLoading] = useState(false)
     const [msg, setMsg] = useState("")
+    const [time, setTime] = useState(dayjs());
 
     async function saveDay() {
         if (hours === "") {
@@ -43,6 +48,15 @@ export default function LogData({ onClose }: {onClose: () => void}) {
         setLoading(false)
     }
 
+    const handleTimeChange = (newValue: any) => {
+        if (!newValue) return;
+
+        setTime(newValue);
+
+        const hours = (newValue.hour() * 60 + newValue.minute()) / 60;
+        setHours(Number(hours.toFixed(1)));
+    }
+
     return (
         <div className="relative max-w-md mx-auto mt-10 p-6 rounded-2xl 
             bg-zinc-900/80 backdrop-blur shadow-xl border border-white/10 space-y-5">
@@ -60,23 +74,11 @@ export default function LogData({ onClose }: {onClose: () => void}) {
 
             {/* Date */}
             <div className="space-y-1">
-                <label className="text-sm text-zinc-400">Date</label>
+                <label className="text-base text-zinc-400">Date</label>
                 <input
                     type="date"
                     value={date}
                     onChange={e => setDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-zinc-800 text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-pink-500"
-                />
-            </div>
-
-            {/* Work Hours */}
-            <div className="space-y-1">
-                <label className="text-sm text-zinc-400">Work Hours</label>
-                <input
-                    type="number"
-                    step="0.1"
-                    value={hours}
-                    onChange={e => setHours(e.target.value === "" ? "" : parseFloat(e.target.value))}
                     className="w-full px-3 py-2 rounded-lg bg-zinc-800 text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-pink-500"
                 />
             </div>
@@ -112,7 +114,87 @@ ${mood === m.value
                         ))}
                 </div>
             </div>
-            
+
+            {/* Work Hours */}
+            <div className="space-y-1">
+                <label className="text-base text-zinc-400">Work Hours</label>
+                {/* <input */}
+                {/*     type="number" */}
+                {/*     step="0.1" */}
+                {/*     value={hours} */}
+                {/*     onChange={e => setHours(e.target.value === "" ? "" : parseFloat(e.target.value))} */}
+                {/*     className="w-full px-3 py-2 rounded-lg bg-zinc-800 text-white border border-white/10 focus:outline-none focus:ring-2 focus:ring-pink-500" */}
+                {/* /> */}
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <StaticTimePicker
+                        value={time}
+                        onChange={handleTimeChange}
+
+                        ampm={false}
+                        slots={{
+                            actionBar: () => null,
+                        }}
+                        slotProps={{
+                            toolbar: {
+                                // @ts-ignore
+                                toolbarTitle: (() => null) as any
+                            }
+                        }}
+                        sx={{
+                            borderRadius: "16px",
+                            backgroundColor: "#27272a",
+
+                            "& .MuiClock-root": {
+                                marginTop: 0,
+                            },
+
+                            "& .MuiPickersToolbarText-root": {
+                                color: "#fff !important",
+                            },
+
+                            "& .MuiClockNumber-root": {
+                                color: "#fff",
+                            },
+
+                            "& .MuiClockNumber-root.Mui-selected": {
+                                color: "#fff !important",
+                            },
+
+                            // "& .MuiClockPointer-root": {
+                            //     backgroundColor: "var(--hint)",
+                            //     width: 4
+                            // },
+
+                            // "& .MuiClockPointer-thumb": {
+                            //     backgroundColor: "var(--hint)",
+                            // },
+
+                            // "& .MuiClock-pin": {
+                            //     backgroundColor: "var(--hint)",
+                            //     width: 4,
+                            //     height: 4
+                            // },
+
+                            "& .MuiClockArrowSwitcher-root": {
+                                color: "#fff",
+                            },
+
+                            "& .MuiSvgIcon-root": {
+                                color: "#fff",
+                            },
+
+                            "& .MuiTypography-root": {
+                                color: "#fff",
+                            },
+                        }}
+                    />
+
+                </LocalizationProvider>
+
+            </div>
+
+
             {/* Button */}
             <button
                 onClick={saveDay}
