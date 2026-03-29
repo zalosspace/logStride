@@ -7,6 +7,7 @@ import Timer from './Timer'
 import LogData from './LogData'
 import Heatmap from './Heatmap/Heatmap'
 import Todo from './Todo'
+import Loader from "./Loader"
 
 export default function App() {
 
@@ -85,6 +86,7 @@ export default function App() {
 
     return (
         <>
+            <Loader />
             <nav className="w-full border-b border-zinc-800 bg-black/40">
                 <div className="max-w-[1400px] mx-auto 
                     flex items-center justify-between px-8 py-4">

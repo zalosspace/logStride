@@ -31,6 +31,7 @@ export default function HourChart({
     }) {
 
     const [showModal, setShowModal] = useState(false)
+    const [showChart, setShowChart] = useState(false)
     const [yearlyData, setYearlyData] = useState<Day[]>([])
 
     // Years
@@ -75,6 +76,12 @@ export default function HourChart({
             setSelectedYear(years[0])
         }
     }, [years])
+
+    useEffect(() => {
+        if (data.length) {
+            setTimeout(() => setShowChart(true), 1000)
+        }
+    }, [data])
 
     return (
         <>
@@ -131,25 +138,27 @@ export default function HourChart({
                 {/*     </AreaChart> */}
                 {/* </ResponsiveContainer>     */}
 
-                <ResponsiveContainer className="max-h-[90%] translate-x-[-2%]">
-                    <BarChart data={data}>
-                        <XAxis 
-                            dataKey="date" 
-                            tick={{ fill: "#888" }} 
-                        />
+                {showChart && (
+                    <ResponsiveContainer className="max-h-[90%] translate-x-[-2%]">
+                        <BarChart data={data}>
+                            <XAxis 
+                                dataKey="date" 
+                                tick={{ fill: "#888" }} 
+                            />
 
-                        <YAxis 
-                            tick={{ fill: "#888" }} 
-                        />
-                        <Tooltip />
+                            <YAxis 
+                                tick={{ fill: "#888" }} 
+                            />
+                            <Tooltip />
 
-                        <Bar
-                            dataKey="hours"
-                            fill="#ff0077"
-                            radius={[6, 6, 0, 0]}
-                        />
-                    </BarChart>
-                </ResponsiveContainer>
+                            <Bar
+                                dataKey="hours"
+                                fill="#ff0077"
+                                radius={[6, 6, 0, 0]}
+                            />
+                        </BarChart>
+                    </ResponsiveContainer>
+                )}
 
             </div>
 

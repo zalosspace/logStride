@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 
 export default function Timer() {
-  const [seconds, setSeconds] = useState(() => fetchTime())
+  const [seconds, setSeconds] = useState<number>(() => fetchTime())
   const [running, setRunning] = useState(false)
 
   const intervalRef = useRef<number | null>(null)
