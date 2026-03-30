@@ -58,19 +58,22 @@ export default function LogData({ onClose }: {onClose: () => void}) {
     }
 
     return (
-        <div className="relative max-w-md mx-auto mt-10 p-6 rounded-2xl 
+        <div className="relative overflow-y-auto max-h-[90svh] max-w-md mx-auto p-6 rounded-2xl 
             bg-zinc-900/80 backdrop-blur shadow-xl border border-white/10 space-y-5">
+
+
+            <div className="flex justify-between">
+            <h2 className="text-2xl font-semibold text-white tracking-tight">
+                Log Your Day
+            </h2>
+
             <button
                 onClick={onClose}
                 className="px-3 py-1 bg-red-500 rounded-lg hover:bg-red-600"
             >
                 ✕
             </button>
-
-
-            <h2 className="text-2xl font-semibold text-white tracking-tight">
-                Log Your Day
-            </h2>
+            </div>
 
             {/* Date */}
             <div className="space-y-1">
