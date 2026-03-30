@@ -29,7 +29,7 @@ export default function Loader() {
   id="loader"
   className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-black z-50"
 >
-  <div className="flex gap-4 -mt-16 text-white text-[5vw] font-semibold">
+  <div className="flex items-center gap-2 sm:gap-3 -mt-16 text-white text-[10vw] sm:text-[7vw] font-semibold">
     <p>Log</p>
     <p className="text-[var(--hint)] brightness-110">Stride</p>
   </div>
