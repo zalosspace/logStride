@@ -33,6 +33,33 @@ export default function HourChart({
     const [showModal, setShowModal] = useState(false)
     const [showChart, setShowChart] = useState(false)
     const [yearlyData, setYearlyData] = useState<Day[]>([])
+    const [workHourGrowth, setWorkHourGrowth] = useState<number>(0)
+
+    // Growth in work hour
+    const calcWorkHourGrowth = () => {
+        if (data.length < 2)
+            return
+
+        const hours = data.slice(-8).map(d => d.hours)
+
+        // Last 7 days excluding today
+        let last7Days = hours.slice(-8, -1)
+
+        let weightedSum = 0
+        let totalWeight = 0
+
+        for (let i=0; i<last7Days.length; i++) {
+            const weight = i + 1;
+            weightedSum += last7Days[i] * weight
+            totalWeight += weight
+        }
+
+        const weightedAvg = weightedSum / totalWeight
+        const today = hours[hours.length - 1]
+        const growth = (today / weightedAvg) * 100
+
+        setWorkHourGrowth(Math.trunc(growth - 100))
+    }
 
     // Years
     const years = useMemo(() => {
@@ -81,15 +108,30 @@ export default function HourChart({
         if (data.length) {
             setTimeout(() => setShowChart(true), 1000)
         }
+        calcWorkHourGrowth()
     }, [data])
 
     return (
         <>
             <div className="w-full flex items-center justify-between px-2 mb-8">
 
+                <div>
+
                 <h2 className="text-lg font-semibold text-zinc-200">
                     Work Hours
                 </h2>
+                <p className="mt-2">
+                    {
+                        workHourGrowth > 0 ? (
+                            <span className="text-[#bfe7c6] font-semibold">+{workHourGrowth}% </span>
+                        ) : (
+                                <span className="text-[var(--hint)] font-semibold"> -{Math.abs(workHourGrowth)}% </span>
+                            )
+
+                    }
+                    From Last 7 Days
+                </p>
+                </div>
 
                 <div className="flex items-center gap-2">
 

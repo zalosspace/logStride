@@ -14,7 +14,7 @@
     --primary: #0c1119;
     --secondary: #141d30;
     --tertiary: #29394f;
-    --hint: #ec4899;
+    --hint: rgb(236, 72, 153);
 
     --color-text: white;
     --color-text-secondary: black;
@@ -69,7 +69,6 @@ body {
 }
 
 /* Heatmap */
-
 .react-calendar-heatmap .color-empty {
   fill: #1f1f1f;
 }
@@ -107,15 +106,15 @@ body {
 }
 
 .good-day {
-    background: #bfe7c6; /* soft pastel green */
+    background: #bfe7c6; 
 }
 
 .mid-day {
-    background: #fff3b0; /* muted pastel yellow */
+    background: #fff3b0; 
 }
 
 .bad-day {
-    background: #ffb3c1; /* soft pastel red/pink */
+    background: #ffb3c1;
 }
 
 .today {
