@@ -100,24 +100,34 @@ export default function App() {
                         {user ? (
                             <>
                                 <button
-                                    className="bg-[var(--hint)] hover:scale-105
-                                    text-white px-4 py-2 rounded-xl text-sm font-medium
-                                    transition-all duration-200 shadow-lg hover:shadow-[0_0_10px_var(--hint)] 
-                                    active:scale-95"
                                     onClick={() => setShowLogModal(true)}
+                                    className="
+                                    bg-[var(--hint)] text-white text-sm font-medium
+                                    transition-all duration-200 active:scale-95
+                                    shadow-lg hover:shadow-[0_0_10px_var(--hint)]
+
+                                    /* Mobile */
+                                    fixed bottom-4 right-4 z-40
+                                    w-14 h-14 rounded-full
+                                    flex items-center justify-center
+
+                                    /* Desktop */
+                                    sm:static sm:w-auto sm:h-auto
+                                    sm:px-4 sm:py-2 sm:rounded-xl
+                                    "
                                 >
-                                    Log Day
+                                    <span className="sm:hidden">Log</span>
+                                    <span className="hidden sm:inline">Log Day</span>
                                 </button>
 
                                 <div className="flex items-center gap-3 bg-zinc-900 px-3 py-1.5 rounded-xl">
-
                                     <img
                                         src={user.user_metadata?.avatar_url}
                                         alt="profile"
                                         className="w-8 h-8 rounded-full border border-zinc-700"
                                     />
 
-                                    <span className="text-sm text-zinc-300 max-w-[120px] truncate">
+                                    <span className="text-sm text-zinc-300 max-w-[80px] truncate">
                                         {user.user_metadata?.full_name || user.email}
                                     </span>
                                 </div>
@@ -144,16 +154,17 @@ export default function App() {
                     ">
                     {/* h-[calc(100vh-130px)]"> */}
                     <div className="widget grid place-items-center
-                        aspect-square sm:aspect-auto">
+                        aspect-square sm:aspect-auto sm:order-none order-4">
                         <Timer />
                     </div>
-                    <div className="widget aspect-square sm:aspect-auto">
+                    <div className="widget aspect-square sm:aspect-auto sm:order-none order-3">
                         <Todo />
                     </div>
-                    <div className="widget grid place-items-center aspect-square sm:aspect-auto">
+                    <div className="widget grid place-items-center aspect-square sm:aspect-auto sm:order-none order-2">
                         <Heatmap user={user}/>
                     </div>
-                    <div className="widget aspect-square sm:aspect-auto col-span-1 lg:col-span-3 grid place-items-center">
+                    <div className="widget aspect-square sm:aspect-auto col-span-1 lg:col-span-3 grid place-items-center
+                        sm:order-none order-1">
                         <HourChart data={data} fetchHours={fetchHours}/>
                     </div>
                 </div>
